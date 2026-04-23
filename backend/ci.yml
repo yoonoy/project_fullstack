@@ -2,14 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   test-backend:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
