@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Fullstack App</title>
 </head>
+
 <body>
     <h1>Aiganysh Fullstack App</h1>
 
@@ -11,42 +13,43 @@
 
     <ul id="list"></ul>
 
-<script>
-const API = import.meta?.env?.VITE_API_URL || "http://localhost:5000";
+    <script>
+        const API = "https://backend-atvo.onrender.com"
 
-async function load() {
-    const res = await fetch(API + "/api/data");
-    const data = await res.json();
+        async function load() {
+            const res = await fetch(API + "/api/data");
+            const data = await res.json();
 
-    const list = document.getElementById("list");
-    list.innerHTML = "";
+            const list = document.getElementById("list");
+            list.innerHTML = "";
 
-    data.forEach(item => {
-        const li = document.createElement("li");
-        li.innerHTML = item[1] + " <button onclick='del("+item[0]+")'>X</button>";
-        list.appendChild(li);
-    });
-}
+            data.forEach(item => {
+                const li = document.createElement("li");
+                li.innerHTML = item[1] + " <button onclick='del(" + item[0] + ")'>X</button>";
+                list.appendChild(li);
+            });
+        }
 
-async function add() {
-    const val = document.getElementById("input").value;
+        async function add() {
+            const val = document.getElementById("input").value;
 
-    await fetch(API + "/api/data", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name: val})
-    });
+            await fetch(API + "/api/data", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: val })
+            });
 
-    load();
-}
+            load();
+        }
 
-async function del(id) {
-    await fetch(API + "/api/data/" + id, {method: "DELETE"});
-    load();
-}
+        async function del(id) {
+            await fetch(API + "/api/data/" + id, { method: "DELETE" });
+            load();
+        }
 
-load();
-</script>
+        load();
+    </script>
 
 </body>
+
 </html>
