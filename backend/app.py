@@ -10,23 +10,24 @@ CORS(app)
 def get_conn():
     return psycopg2.connect(
         os.getenv("DATABASE_URL"),
-        sslmode="require"
+        sslmode="disable"
     )
 
 
 def init_db():
     conn = get_conn()
     cur = conn.cursor()
+
     cur.execute("""
         CREATE TABLE IF NOT EXISTS items (
             id SERIAL PRIMARY KEY,
             name TEXT
         )
     """)
+
     conn.commit()
     cur.close()
     conn.close()
-
 
 
 @app.route("/")
@@ -37,6 +38,7 @@ def home():
 @app.route("/api/data", methods=["GET"])
 def get_data():
     init_db()
+
     conn = get_conn()
     cur = conn.cursor()
 
@@ -52,6 +54,7 @@ def get_data():
 @app.route("/api/data", methods=["POST"])
 def add_data():
     init_db()
+
     data = request.json
 
     conn = get_conn()
@@ -67,21 +70,6 @@ def add_data():
     conn.close()
 
     return jsonify({"message": "added"})
-
-
-@app.route("/api/data/<int:id>", methods=["DELETE"])
-def delete_data(id):
-    conn = get_conn()
-    cur = conn.cursor()
-
-    cur.execute("DELETE FROM items WHERE id=%s", (id,))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    return jsonify({"message": "deleted"})
-
 
 
 if __name__ == "__main__":
